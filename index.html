@@ -677,14 +677,20 @@ function genQuestions(o){
       a=rnd(50,1000); b=rnd(1,a);
       q=ltr(`${a} − ${b} = ?`); ans=a-b;
     } else if(o==='mul'){
-      do { a=rnd(2,10); b=rnd(2,10); } while((a===2||b===2) && twosCount>=1);
+      const used=qs.map(q=>{ const [x,y]=[q.a,q.b]; return Math.min(x,y)+'_'+Math.max(x,y); });
+      let tries=0;
+      do { a=rnd(2,10); b=rnd(2,10); tries++; }
+      while(tries<200 && (((a===2||b===2) && twosCount>=1) || used.includes(Math.min(a,b)+'_'+Math.max(a,b))));
       if(a===2||b===2) twosCount++;
       q=ltr(`${a} × ${b} = ?`); ans=a*b;
     } else {
-      a=rnd(2,10); b=rnd(2,10);
+      const used=qs.map(q=>{ const [x,y]=[q.a,q.b]; return Math.min(x,y)+'_'+Math.max(x,y); });
+      let tries=0;
+      do { a=rnd(2,10); b=rnd(2,10); tries++; }
+      while(tries<200 && used.includes(Math.min(a,b)+'_'+Math.max(a,b)));
       q=ltr(`${a*b} ÷ ${a} = ?`); ans=b;
     }
-    qs.push({q,ans});
+    qs.push({q,ans,a,b});
   }
   return qs;
 }
