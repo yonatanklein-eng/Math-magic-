@@ -656,7 +656,7 @@ function npDel() {
 }
 
 /* ===== GAME STATE ===== */
-let questions=[], curQ=0, score=0, op='', history=[];
+let questions=[], curQ=0, score=0, op='', history=[], checking=false;
 const opNames = {add:'חיבור',sub:'חיסור',mul:'כפל',div:'חילוק'};
 const praise  = ['מעולה! 🌟','וואו! ✨','נכון! 💖','כל הכבוד! 🎀','מדהים! 🦄','פנטסטי! 🌈','יופי! 💫','אחלה! 🎉','סופר! 🍭','מושלם! 💎'];
 const wrongs  = ['כמעט! 💪','לא נורא, הלאה!','תנסי שוב בפעם הבאה!','ממשיכים קדימה! 🌸'];
@@ -718,14 +718,16 @@ function renderQ(){
 }
 
 function checkAnswer(){
+  if(checking) return;
   const val=parseInt(document.getElementById('ans-input').value,10);
   if(isNaN(val)) return;
+  checking=true;
   const correct=questions[curQ].ans;
   const ok=val===correct;
   history.push({q:questions[curQ].q,ans:correct,user:val,ok});
   if(ok){ score++; onCorrect(); }
   else  { onWrong(correct); }
-  setTimeout(()=>{ hideFeedback(); curQ++; if(curQ<10)renderQ(); else showScoreScreen(); }, 1800);
+  setTimeout(()=>{ hideFeedback(); checking=false; curQ++; if(curQ<10)renderQ(); else showScoreScreen(); }, 1800);
 }
 
 document.getElementById('ans-input').addEventListener('keydown',e=>{ if(e.key==='Enter') checkAnswer(); });
