@@ -667,12 +667,23 @@ function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 
 function genQuestions(o){
   const qs=[];
+  let twosCount=0;
   for(let i=0;i<10;i++){
     let a,b,q,ans;
-    if(o==='add'){ a=rnd(10,900); b=rnd(10,Math.min(990,1000-a)); q=ltr(`${a} + ${b} = ?`); ans=a+b; }
-    else if(o==='sub'){ a=rnd(50,1000); b=rnd(1,a); q=ltr(`${a} − ${b} = ?`); ans=a-b; }
-    else if(o==='mul'){ a=rnd(1,10); b=rnd(1,10); q=ltr(`${a} × ${b} = ?`); ans=a*b; }
-    else { a=rnd(1,10); b=rnd(1,10); q=ltr(`${a*b} ÷ ${a} = ?`); ans=b; }
+    if(o==='add'){
+      a=rnd(10,900); b=rnd(10,Math.min(990,1000-a));
+      q=ltr(`${a} + ${b} = ?`); ans=a+b;
+    } else if(o==='sub'){
+      a=rnd(50,1000); b=rnd(1,a);
+      q=ltr(`${a} − ${b} = ?`); ans=a-b;
+    } else if(o==='mul'){
+      do { a=rnd(2,10); b=rnd(2,10); } while((a===2||b===2) && twosCount>=1);
+      if(a===2||b===2) twosCount++;
+      q=ltr(`${a} × ${b} = ?`); ans=a*b;
+    } else {
+      a=rnd(2,10); b=rnd(2,10);
+      q=ltr(`${a*b} ÷ ${a} = ?`); ans=b;
+    }
     qs.push({q,ans});
   }
   return qs;
